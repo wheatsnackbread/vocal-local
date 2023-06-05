@@ -5,7 +5,7 @@ Get latest version of Python: https://www.python.org/downloads/
 In terminal, run one line at a time:
 <br/>
 pip install tkinter <br/>
-pip install whisper <br/>
+pip install openai-whisper <br/>
 pip install pytube <br/>
 brew install ffmpeg
 <br/><br/>
