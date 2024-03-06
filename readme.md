@@ -9,4 +9,4 @@ pip install openai-whisper <br/>
 pip install pytube <br/>
 brew install ffmpeg
 <br/><br/>
-Use PyCharm or Visual Studio Code to run the code (install runner)
+Use PyCharm or Visual Studio Code to run the code (install runner) in gui.py
