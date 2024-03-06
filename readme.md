@@ -1,4 +1,4 @@
-Install the following libraries: 
+To install, perform the following
 <br/>
 Get latest version of Python: https://www.python.org/downloads/
 <br/><br/>
