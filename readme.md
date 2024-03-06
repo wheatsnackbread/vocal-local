@@ -1,3 +1,7 @@
+Developed for the Leveraging Information Technology course (BUS 3322) at Ivey Business School, winter 2024. View the presentation at:
+[![Presentation Preview](https://ibb.co/gRVD9t9)](https://uwoca-my.sharepoint.com/:p:/g/personal/rwang749_uwo_ca/EXmcKoL-HI5AqXhOrrZmHjwB_PkfK5vBjAZuknMeprIA-Q?e=Ao0tVI)
+
+
 To install, perform the following
 <br/>
 Get latest version of Python: https://www.python.org/downloads/
