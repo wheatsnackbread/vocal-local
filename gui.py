@@ -3,11 +3,12 @@ from tkinter import *
 from tkinter.ttk import *
 import tkinter.filedialog as filedialog
 import whisper
+from whisper.utils import get_writer
 import os
 from pytube import YouTube  # !pip install pytube
 from pytube.exceptions import RegexMatchError
-import threading
-#import pkg_resources.py2_warn
+
+# import pkg_resources.py2_warn
 
 
 def drop_inside_list_box(event):
@@ -37,10 +38,10 @@ def download_yt():
         yt = YouTube(e.get())
 
         video = yt.streams.filter(only_audio=True).first()
-        destination = './tracks'
+        destination = "./tracks"
         out_file = video.download(output_path=destination)
         base, ext = os.path.splitext(out_file)
-        new_file = base + '.mp3'
+        new_file = base + ".mp3"
         os.rename(out_file, new_file)
 
         file_path = new_file
@@ -51,16 +52,15 @@ def download_yt():
 
     popup = Tk()
 
-    popup.title('Enter YouTube URL')
-    popup.geometry('500x80')
+    popup.title("Enter YouTube URL")
+    popup.geometry("500x80")
 
     e = Entry(popup)
     e.pack()
     e.focus_set()
 
-    b = Button(popup, text='Download and Select',
-               command=lambda: save_video())
-    b.pack(side='bottom')
+    b = Button(popup, text="Download and Select", command=lambda: save_video())
+    b.pack(side="bottom")
 
     popup.mainloop()
     save_path = "./mp3"
@@ -74,17 +74,20 @@ frame = Frame(window)
 frame.pack(side=TOP)
 
 # Set the window size
-window.geometry('1000x800')
+window.geometry("1000x800")
 # window.config(bg='lightblue')
 window.wm_title("GUI for OpenAI Whisper")
 
 # Title label
-label = tk.Label(frame, text="\n Transcribe",
-                 font=("Lato", 24), justify=tk.LEFT)
+label = tk.Label(frame, text="\n Transcribe", font=("Lato", 24), justify=tk.LEFT)
 label.pack(side=TOP)
 
 # Text label
-label = tk.Label(frame, text="\n• Select files below.\n• Click the file you want to transcribe and hit process. \n• The text will appear and will be automatically added to the clipboard.\n", justify=tk.LEFT)
+label = tk.Label(
+    frame,
+    text="\n• Select files below.\n• Click the file you want to transcribe and hit process. \n• The text will appear and will be automatically added to the clipboard.\n",
+    justify=tk.LEFT,
+)
 label.pack(side=TOP)
 
 # Define mid-frame
@@ -92,13 +95,15 @@ midFrame = Frame(window)
 midFrame.pack(side=TOP)
 
 # Create a button select file and add it to the window
-button = tk.Button(midFrame, text='Add Local File',
-                   command=select_file, justify=tk.LEFT)
+button = tk.Button(
+    midFrame, text="Add Local File", command=select_file, justify=tk.LEFT
+)
 button.pack(side=TOP, fill=X)
 
 # Create a button select file and add it to the window
-button = tk.Button(midFrame, text='Add YouTube Video (URL)',
-                   command=download_yt, justify=tk.LEFT)
+button = tk.Button(
+    midFrame, text="Add YouTube Video (URL)", command=download_yt, justify=tk.LEFT
+)
 button.pack(side=BOTTOM, fill=X)
 
 # Create a button select file and add it to the window
@@ -116,13 +121,11 @@ listb.pack(side=BOTTOM, pady=20)
 
 
 def transcribe_file():
-
     # Check if the listbox has a selected item
     if listb.curselection():
-
         # bar()
 
-        progress['value'] = 20
+        progress["value"] = 20
         # window.update_idletasks()
 
         # Get the selected item from the listbox
@@ -131,16 +134,16 @@ def transcribe_file():
         # Load the Whisper model, options are tiny.en/base.en/small.en
         model = whisper.load_model("base.en")
 
-        progress['value'] = 40
+        progress["value"] = 40
         # window.update_idletasks()
 
         # Transcribe the selected audio file
         result = model.transcribe(selected_item)
 
         # Delete the existing text in the text widget
-        text.delete('1.0', tk.END)
+        text.delete("1.0", tk.END)
 
-        progress['value'] = 80
+        progress["value"] = 80
         # window.update_idletasks()
 
         # Insert the transcribed text into the text widget
@@ -148,9 +151,13 @@ def transcribe_file():
 
         # Copy the transcribed text to the clipboard
         text.clipboard_clear()
-        text.clipboard_append(text.get('1.0', tk.END))
+        text.clipboard_append(text.get("1.0", tk.END))
 
-        progress['value'] = 100
+        progress["value"] = 100
+
+        # Save the result's .vtt file
+        vtt_writer = get_writer("vtt", f"./transcripts")
+        vtt_writer(result, selected_item)
 
     else:
         # Set the text of the textbox to "Select an item"
@@ -160,59 +167,58 @@ def transcribe_file():
 
 def bar():
     # import time
-    progress['value'] = 20
+    progress["value"] = 20
     window.update_idletasks()
     # time.sleep(1)
 
-    progress['value'] = 40
+    progress["value"] = 40
     window.update_idletasks()
     # time.sleep(1)
 
-    progress['value'] = 50
+    progress["value"] = 50
     window.update_idletasks()
     # time.sleep(1)
 
-    progress['value'] = 60
+    progress["value"] = 60
     window.update_idletasks()
     # window.sleep(1)
 
-    progress['value'] = 80
+    progress["value"] = 80
     window.update_idletasks()
     # time.sleep(1)
-    progress['value'] = 100
+    progress["value"] = 100
 
 
 lowFrame = Frame(window)
 lowFrame.pack(side=TOP)
 
 # Create a button to clear selected file
-button = tk.Button(lowFrame, text='Clear Selected',
-                   command=clear_file, justify=tk.LEFT)
+button = tk.Button(lowFrame, text="Clear Selected", command=clear_file, justify=tk.LEFT)
 button.pack(side=LEFT, pady=5, fill=X)
 
 # Create a button to clear ALL files
-button = tk.Button(lowFrame, text='Clear All',
-                   command=clear_all_file, justify=tk.LEFT)
+button = tk.Button(lowFrame, text="Clear All", command=clear_all_file, justify=tk.LEFT)
 button.pack(side=RIGHT, pady=5, fill=X)
 
 lowFrame = Frame(window)
 lowFrame.pack(side=TOP)
 
 # Create a transcribe button and add it to the window
-button = tk.Button(lowFrame, text='Transcribe Selected',
-                   command=transcribe_file, justify=tk.RIGHT)
+button = tk.Button(
+    lowFrame, text="Transcribe Selected", command=transcribe_file, justify=tk.RIGHT
+)
 button.pack(side=LEFT, pady=5, fill=X)
 
 # Create a transcribe button and add it to the window
-button = tk.Button(lowFrame, text='Transcribe All',
-                   command=transcribe_file, justify=tk.RIGHT)
-#button.pack(side=RIGHT, pady=5, fill=X)
+button = tk.Button(
+    lowFrame, text="Transcribe All", command=transcribe_file, justify=tk.RIGHT
+)
+# button.pack(side=RIGHT, pady=5, fill=X)
 
 # This button will initialize
 # the progress bar
 lowFrame = Frame(window)
-progress = Progressbar(window, orient=HORIZONTAL,
-                       length=100, mode='determinate')
+progress = Progressbar(window, orient=HORIZONTAL, length=100, mode="determinate")
 # progress.pack(pady=10)
 
 lowFrame = Frame(window)
